@@ -36,6 +36,9 @@ $id_user = $_SESSION['idUser'];
     <link href="../vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
     <link href="../Styles/clockpicker.css" rel="stylesheet">
     
+    <!-- Select -->
+    <link rel="stylesheet" href="../Styles/jquery-ui.min.css">
+    
 </head>
 
 <body id="page-top" class="esto">
@@ -72,6 +75,7 @@ $id_user = $_SESSION['idUser'];
                     <span>Asignaturas</span></a>
             </li>
 
+
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
 
@@ -81,6 +85,9 @@ $id_user = $_SESSION['idUser'];
                     <i class="fas fa-fw fa-calendar-days"></i>
                     <span>Calendario</span></a>
             </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
 
             <!-- Nav Item -->
             <li class="nav-item">

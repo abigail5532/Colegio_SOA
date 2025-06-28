@@ -36,6 +36,7 @@
     <script src="../vendor/datatables/jquery.dataTables.min.js"></script>
     <script src="../vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
+    
     <!-- Page level custom scripts -->
     <script src="../js/demo/datatables-demo.js"></script>
     <script src="../js/Functions.js"></script>
@@ -49,6 +50,9 @@
     <script type="text/javascript" src="../js/jsCalendar/fullcalendar.min.js"></script>
     <script src='../js/jsCalendar/es.js'></script>
     
+     <!-- Select -->
+     <script src="../js/jquery-ui.min.js"></script>
+
     <!-- Hour -->
     <script src="../js/clockpicker.js"></script>
 
