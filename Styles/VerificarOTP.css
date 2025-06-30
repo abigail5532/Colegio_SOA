@@ -1,0 +1,55 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background: url('Img/fondo_h3.png') no-repeat center center fixed;
+    background-size: cover;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.otp-card {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    max-width: 400px;
+    width: 100%;
+}
+
+.otp-card img {
+    width: 80px;
+    margin-bottom: 20px;
+}
+
+.otp-inputs input {
+    width: 50px;
+    height: 60px;
+    font-size: 24px;
+    font-weight: 600;
+    text-align: center;
+    margin: 0 5px;
+    border: 2px solid #28a745;
+    border-radius: 8px;
+}
+
+.otp-inputs input:focus {
+    outline: none;
+    border-color: #71B600;
+    box-shadow: 0 0 5px rgba(113,182,0,0.5);
+}
+
+.btn-verify {
+    background-color: #28a745;
+    border: none;
+    font-weight: 600;
+}
+
+.btn-verify:hover {
+    background-color: #71B600;
+}
+
+.poppins-font {
+    font-family: 'Poppins', sans-serif !important;
+}

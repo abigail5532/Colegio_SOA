@@ -1,0 +1,77 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    height: 100%;
+}
+
+.bg-image {
+    background-image: url('Img/recuperar.jpg');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #d7f5cc;
+}
+
+.form-container {
+    padding: 60px;
+    width: 100%;
+    max-width: 400px;
+    background-color: #ffffff;
+}
+
+.form-container label, .form-container input, .form-container button, .form-container a {
+    font-size: 1.1rem;
+}
+
+
+.titulo-imagen {
+    color: #28a745;
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.btn-custom {
+    background-color: #71B600;
+    color: white;
+    font-weight: 500;
+}
+
+.btn-custom:hover {
+    background-color: #5e9900;
+    color: white;
+}
+
+.position-relative {
+    position: relative;
+}
+
+.input-icon i.fa {
+    width: 22px;
+    text-align: center;
+}
+
+.position-relative {
+    position: relative;
+}
+
+.toggle-password {
+    cursor: pointer;
+    color: #28a745;
+    font-size: 1.2rem;
+}
+
+.form-control.is-valid {
+    border-color: #28a745;
+}
+
+.form-control.is-invalid {
+    border-color: red;
+}
+
+@media (max-width: 991px) {
+    .bg-image {
+        display: none;
+    }
+}
