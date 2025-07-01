@@ -4,10 +4,13 @@ $id_user = $_SESSION['idUser'];
 include('../Includes/Connection.php');
 include('../Includes/HeaderDoc.php');
 
-$SqlEventos = ("SELECT c.idcita, CONCAT(a.nombres, ' ', a.apellidos) AS alumno_nombre, 
+$SqlEventos = ("SELECT 
+c.idcita, 
+CONCAT(a.nombres, ' ', a.apellidos) AS alumno_nombre, 
 c.reunion, c.fecha, c.horai, c.horaf, c.nomfamiliar, c.descripcion, c.link,
 c.estado FROM cita AS c JOIN alumnos AS a ON c.alumno = a.idalum
-WHERE c.docente = '$id_user' AND c.estado = 'Reservado'");
+WHERE c.docente = '$id_user' AND c.estado = 'Reservado'
+");
 $resulEventos = mysqli_query($conexion, $SqlEventos);
 ?>
 
@@ -43,9 +46,13 @@ $resulEventos = mysqli_query($conexion, $SqlEventos);
         <p class="mb-1"><strong>Hora:</strong> <span name="hora" class="text-wrap"></span></p>
         <p class="mb-1"><strong>Alumno:</strong> <span name="alumno" class="text-wrap"></span></p>
         <p class="mb-1"><strong>Apoderado:</strong> <span name="familiar" class="text-wrap"></span></p>
-        <p class="mb-3"><strong>Link de reunión:</strong> 
-          <a href="#" name="link" class="text-wrap" target="_blank"></a>
+        
+        <!-- Este contenedor se muestra solo si la reunión es virtual -->
+        <p class="mb-3" id="link-container" style="display: none;">
+          <strong>Link de reunión:</strong> 
+          <a href="#" name="link" class="text-wrap" target="_blank">Haz clic aquí</a>
         </p>
+
         <textarea class="form-control" name="detalles" style="color: black;" rows="6" disabled></textarea>
       </div>
       <div class="modal-footer">
@@ -56,6 +63,7 @@ $resulEventos = mysqli_query($conexion, $SqlEventos);
 </div>
 <!-- End Modal -->
 
+<!-- Scripts -->
 <script src ="../js/jsCalendar/jquery-3.0.0.min.js"></script>
 <script src="../js/jsCalendar/popper.min.js"></script>
 <script src="../js/jsCalendar/bootstrap.min.js"></script>
@@ -104,8 +112,16 @@ $(document).ready(function() {
       $('span[name=familiar]').text(event.family);
       $('span[name=fecha]').text(event.start.format('DD-MM-YYYY'));
       $('span[name=hora]').text(event.start.format('HH:mm') + ' - ' + event.end.format('HH:mm'));
-      $('a[name=link]').attr('href', event.link).text(event.link);
       $('textarea[name=detalles]').text(event.description);
+
+      // Mostrar link solo si la reunión es virtual
+      if (event.reunion.toLowerCase() === 'virtual') {
+        $('#link-container').show();
+        $('a[name=link]').attr('href', event.link).text("Haz clic aquí");
+      } else {
+        $('#link-container').hide();
+      }
+
       $("#modalinfo").modal();
     }
 

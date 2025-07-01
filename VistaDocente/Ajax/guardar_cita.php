@@ -11,6 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $hora = $_POST['hora'];
     $nombrefa = $_POST['nombrefa'];
     $descripcion = $_POST['descripcion'];
+    $link = $_POST['link'];
     $estado = $_POST['estado'];
 
     // Dividir el campo de hora en horai y horaf
@@ -41,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $horario_id = $row_horario['id'];
 
     // Insertar los datos en la tabla de citas
-    $query_cita = "INSERT INTO cita (alumno, docente, reunion, fecha, horai, horaf, nomfamiliar, descripcion, estado) VALUES ('$alumno_id', '$docente_id', '$reunion', '$fecha', '$horai', '$horaf', '$nombrefa', '$descripcion', '$estado')";
+    $query_cita = "INSERT INTO cita (alumno, docente, reunion, fecha, horai, horaf, nomfamiliar, descripcion, link, estado) VALUES ('$alumno_id', '$docente_id', '$reunion', '$fecha', '$horai', '$horaf', '$nombrefa', '$descripcion', '$link', '$estado')";
     if (mysqli_query($conexion, $query_cita)) {
         // Actualizar el estado del horario
         $query_update_horario = "UPDATE horario SET estado = 'Inactivo' WHERE id = '$horario_id'";

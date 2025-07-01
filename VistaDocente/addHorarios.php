@@ -21,32 +21,37 @@ include_once "../Includes/HeaderDoc.php";
                         </div>
                     </div>  
                     <div class="col-md-6">
-                    <div class="form-group">
-                    <input type="hidden" name="id" id="id" value="<?php echo $id; ?>">
-                    <input type="hidden" name="docentehor" id="docentehor" value="<?php echo $_SESSION["idUser"];?>">
-                            <label class="col-form-label">Reunion</label>
+                        <div class="form-group">
+                            <input type="hidden" name="id" id="id" value="<?php echo $id; ?>">
+                            <input type="hidden" name="docentehor" id="docentehor" value="<?php echo $_SESSION["idUser"];?>">
+                            <label class="col-form-label">Tipo de Reunión</label>
                             <select class="form-control" name="reunion" id="reunion">
                                 <option value="Presencial" <?php echo ($reunion == 'Presencial') ? 'selected' : ''; ?>>Presencial</option>
                                 <option value="Virtual" <?php echo ($reunion == 'Virtual') ? 'selected' : ''; ?>>Virtual</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            
                             <label class="col-form-label">Fecha Disponible</label>
                             <input type="date" class="form-control" name="fechahor" id="fechahor" value="<?php echo $dia; ?>">
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">Hora Inicial</label>
-                            <div class="input-group clockpicker" data-placement="left" data-align="top" data-autoclose="true">
-                                <input type="text" class="form-control" value="<?php echo $horai; ?>" placeholder="hh:mm" name="horainicialhor" id="horainicialhor">
-                                <span class="input-group-text" style="border-bottom-left-radius: 0; border-top-left-radius: 0;"><i class="fa fa-clock-o" aria-hidden="true"></i></span>
+                        <div class="row">
+                            <div class = "col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Hora Inicial</label>
+                                    <div class="input-group clockpicker" data-placement="left" data-align="top" data-autoclose="true">
+                                        <input type="text" class="form-control" value="<?php echo $horai; ?>" placeholder="hh:mm" name="horainicialhor" id="horainicialhor">
+                                        <span class="input-group-text" style="border-bottom-left-radius: 0; border-top-left-radius: 0;"><i class="fa fa-clock-o" aria-hidden="true"></i></span>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Hora Final</label>
-                            <div class="input-group clockpicker" data-placement="left" data-align="top" data-autoclose="true">
-                                <input type="text" class="form-control" value="<?php echo $horaf; ?>" placeholder="hh:mm" name="horafinalhor" id="horafinalhor">
-                                <span class="input-group-text" style="border-bottom-left-radius: 0; border-top-left-radius: 0;"><i class="fa fa-clock-o" aria-hidden="true"></i></span>
+                            <div class = "col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Hora Final</label>
+                                    <div class="input-group clockpicker" data-placement="left" data-align="top" data-autoclose="true">
+                                        <input type="text" class="form-control" value="<?php echo $horaf; ?>" placeholder="hh:mm" name="horafinalhor" id="horafinalhor">
+                                        <span class="input-group-text" style="border-bottom-left-radius: 0; border-top-left-radius: 0;"><i class="fa fa-clock-o" aria-hidden="true"></i></span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
