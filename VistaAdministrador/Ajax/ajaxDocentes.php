@@ -2,9 +2,10 @@
 $iddoc = isset($_GET['iddoc']) ? $_GET['iddoc'] : '';
 
 // Inicializar variables
+$dni = '';
 $nombres = '';
 $apellidos = '';
-$dni = '';
+$email = '';
 $fecnacimiento = '';
 $direccion = '';
 $telefono = '';
@@ -19,9 +20,10 @@ if ($iddoc) {
     $row = $result->fetch_assoc();
     
     if ($row) {
+        $dni = $row['dni'];
         $nombres = $row['nombres'];
         $apellidos = $row['apellidos'];
-        $dni = $row['dni'];
+        $email = $row['email'];
         $fecnacimiento = $row['fecnacimiento'];
         $direccion = $row['direccion'];
         $telefono = $row['telefono'];
@@ -43,7 +45,7 @@ if ($iddoc) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Verificar si los campos están vacíos
-    if (empty($_POST['nombresdoc']) || empty($_POST['apellidosdoc']) || empty($_POST['dnidoc']) || empty($_POST['fecnacimientodoc']) || empty($_POST['direcciondoc']) || empty($_POST['telefonodoc']) || empty($_POST['estadodoc'])) {
+    if (empty($_POST['dnidoc']) || empty($_POST['nombresdoc']) || empty($_POST['apellidosdoc']) || empty($_POST['email']) || empty($_POST['fecnacimientodoc']) || empty($_POST['direcciondoc']) || empty($_POST['telefonodoc'])) {
         echo "<script>
                 document.addEventListener('DOMContentLoaded', function() {
                     Swal.fire({
@@ -55,14 +57,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 });
               </script>";
     } else {
+        $dni = $_POST['dnidoc'];
         $iddoc = $_POST['iddoc'];
         $nombres = $_POST['nombresdoc'];
         $apellidos = $_POST['apellidosdoc'];
-        $dni = $_POST['dnidoc'];
+        $email = $_POST['email'];
         $fecnacimiento = $_POST['fecnacimientodoc'];
         $direccion = $_POST['direcciondoc'];
         $telefono = $_POST['telefonodoc'];
-        $estado = $_POST['estadodoc'];
+        $estado = "Activo";
         
         if (empty($iddoc)) {
             // Verificar si ya existe
@@ -86,8 +89,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Cifrar la contraseña
                 $clave = password_hash($_POST['clavedoc'], PASSWORD_DEFAULT);
                 // Insertar nuevo
-                $stmt = $conexion->prepare("INSERT INTO docentes (nombres, apellidos, dni, fecnacimiento, direccion, telefono, clave, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-                $stmt->bind_param("ssssssss", $nombres, $apellidos, $dni, $fecnacimiento, $direccion, $telefono, $clave, $estado);
+                $stmt = $conexion->prepare("INSERT INTO docentes (dni, nombres, apellidos, email, fecnacimiento, direccion, telefono, clave, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                $stmt->bind_param("sssssssss", $dni, $nombres, $apellidos, $email, $fecnacimiento, $direccion, $telefono, $clave, $estado);
                 
                 if ($stmt->execute()) {
                     echo "<script>
@@ -120,8 +123,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         } else {
             // Actualizar registro
-            $sql_update = "UPDATE docentes SET nombres = ?, apellidos = ?, dni = ?, fecnacimiento = ?, direccion = ?, telefono = ?, estado = ?";
-            $params = [$nombres, $apellidos, $dni, $fecnacimiento, $direccion, $telefono, $estado];
+            $sql_update = "UPDATE docentes SET dni = ?, nombres = ?, apellidos = ?, email = ?, fecnacimiento = ?, direccion = ?, telefono = ?";
+            $params = [$dni, $nombres, $apellidos, $email, $fecnacimiento, $direccion, $telefono];
             $types = "sssssss";
             
             // Solo actualizar la contraseña si se ha ingresado una nueva

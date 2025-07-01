@@ -35,7 +35,7 @@ if ($idasig) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Verificar si los campos están vacíos
-    if (empty($_POST['areacurricularasig']) || empty($_POST['nombreasig']) || empty($_POST['estadoasig'])) {
+    if (empty($_POST['areacurricularasig']) || empty($_POST['nombreasig'])) {
         echo "<script>
                 document.addEventListener('DOMContentLoaded', function() {
                     Swal.fire({
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $idasig = $_POST['idasig'];
         $areacurricular = $_POST['areacurricularasig'];
         $nombre = $_POST['nombreasig'];
-        $estado = $_POST['estadoasig'];
+        $estado = "Activo";
         
         if (empty($idasig)) {
             // Verificar si ya existe
@@ -106,8 +106,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         } else {
             // Actualizar registro
-            $stmt = $conexion->prepare("UPDATE asignaturas SET areacurricular = ?, nombre = ?, estado = ? WHERE idasig = ?");
-            $stmt->bind_param("sssi", $areacurricular, $nombre, $estado, $idasig);
+            $stmt = $conexion->prepare("UPDATE asignaturas SET areacurricular = ?, nombre = ? WHERE idasig = ?");
+            $stmt->bind_param("ssi", $areacurricular, $nombre, $idasig);
 
             if ($stmt->execute()) {
                 echo "<script>

@@ -13,11 +13,11 @@ include_once "../Includes/Header.php";
             <h6 class="head-table m-0 font-weight-bold">Registro de Asignatura</h6>
         </div>
         <div class="card-body" style="color: black;">
-            <form id="formAsignaturas" method="post">
+            <form id="formAsignaturas" method="post" class="needs-validation" novalidate>
                 <div class="form-group">
                     <label class="col-form-label">Área Curricular:</label>
-                    <select class="form-control" name="areacurricularasig" id="areacurricularasig">
-                        <option selected disabled> -- Seleccionar el área curricular -- </option>
+                    <select class="form-control" name="areacurricularasig" id="areacurricularasig" required>
+                        <option value="" selected disabled> -- Seleccionar el área curricular -- </option>
                         <?php
                         $query = mysqli_query($conexion, "SELECT * FROM area_curricular");
                                 while ($row = mysqli_fetch_assoc($query)) {
@@ -30,14 +30,7 @@ include_once "../Includes/Header.php";
                 <div class="form-group">
                     <input type="hidden" name="idasig" id="idasig" value="<?php echo $idasig; ?>">
                     <label class="col-form-label">Nombre:</label>
-                    <input type="text" class="form-control" name="nombreasig" id="nombreasig" value="<?php echo $nombre; ?>">
-                </div>
-                <div class="form-group">
-                    <label class="col-form-label">Estado:</label>
-                    <select class="form-control" name="estadoasig" id="estadoasig">
-                        <option value="Activo" <?php echo ($estado == 'Activo') ? 'selected' : ''; ?>>Activo</option>
-                        <option value="Inactivo" <?php echo ($estado == 'Inactivo') ? 'selected' : ''; ?>>Inactivo</option>
-                    </select>
+                    <input type="text" class="form-control" name="nombreasig" id="nombreasig" value="<?php echo $nombre; ?>" required>
                 </div>
                 <div class="modal-footer">
                     <a href="tblAsignaturas.php" class="btn" style="background-color: red; color: white;">Cancelar </a>
@@ -47,6 +40,25 @@ include_once "../Includes/Header.php";
         </div>
     </div>
 </div>
+
+<script>
+    // Bootstrap validation
+    (() => {
+        'use strict';
+        const forms = document.querySelectorAll('.needs-validation');
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+
+</script>
+
 <?php
 include_once "../Includes/Footer.php";
 ?>

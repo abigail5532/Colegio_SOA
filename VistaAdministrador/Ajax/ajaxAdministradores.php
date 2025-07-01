@@ -2,9 +2,10 @@
 $idadm = isset($_GET['idadm']) ? $_GET['idadm'] : '';
 
 // Inicializar variables
+$dni = '';
 $nombres = '';
 $apellidos = '';
-$dni = '';
+$email = '';
 $telefono = '';
 $clave = '';
 $rol = '';
@@ -19,9 +20,10 @@ if ($idadm) {
     $data = $result->fetch_assoc();
     
     if ($data) {
+        $dni = $data['dni'];
         $nombres = $data['nombres'];
         $apellidos = $data['apellidos'];
-        $dni = $data['dni'];
+        $email = $data['email'];
         $telefono = $data['telefono'];
         $clave = $data['clave'];
         $rol = $data['rol'];
@@ -43,7 +45,7 @@ if ($idadm) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Verificar si los campos están vacíos
-    if (empty($_POST['nombresadm']) || empty($_POST['apellidosadm']) || empty($_POST['dniadm']) || empty($_POST['telefonoadm'])|| empty($_POST['roladm']) || empty($_POST['estadoadm'])) {
+    if (empty($_POST['dniadm']) || empty($_POST['nombresadm']) || empty($_POST['apellidosadm']) || empty($_POST['email']) || empty($_POST['telefonoadm'])|| empty($_POST['roladm'])) {
         echo "<script>
                 document.addEventListener('DOMContentLoaded', function() {
                     Swal.fire({
@@ -56,12 +58,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               </script>";
     } else {
         $idadm = $_POST['idadm'];
+        $dni = $_POST['dniadm'];
         $nombres = $_POST['nombresadm'];
         $apellidos = $_POST['apellidosadm'];
-        $dni = $_POST['dniadm'];
+        $email = $_POST['email'];
         $telefono = $_POST['telefonoadm'];
         $rol = $_POST['roladm'];
-        $estado = $_POST['estadoadm'];
+        $estado = "Activo";
         
         if (empty($idadm)) {
             // Verificar si ya existe
@@ -85,8 +88,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Cifrar la contraseña
                 $clave = password_hash($_POST['claveadm'], PASSWORD_DEFAULT);
                 // Insertar nuevo
-                $stmt = $conexion->prepare("INSERT INTO administradores (nombres, apellidos, dni, telefono, clave, rol, estado) VALUES (?, ?, ?, ?, ?, ?, ?)");
-                $stmt->bind_param("sssssss", $nombres, $apellidos, $dni, $telefono, $clave, $rol, $estado);
+                $stmt = $conexion->prepare("INSERT INTO administradores (dni, nombres, apellidos, email, telefono, clave, rol, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                $stmt->bind_param("ssssssss", $dni, $nombres, $apellidos, $email, $telefono, $clave, $rol, $estado);
                 
                 if ($stmt->execute()) {
                     echo "<script>
@@ -119,8 +122,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         } else {
             // Actualizar registro
-            $sql_update = "UPDATE administradores SET nombres = ?, apellidos = ?, dni = ?, telefono = ?, rol = ?, estado = ?";
-            $params = [$nombres, $apellidos, $dni, $telefono, $rol, $estado];
+            $sql_update = "UPDATE administradores SET dni = ?, nombres = ?, apellidos = ?, email = ?, telefono = ?, rol = ?";
+            $params = [$dni, $nombres, $apellidos, $email, $telefono, $rol];
             $types = "ssssss";
             
             // Solo actualizar la contraseña si se ha ingresado una nueva

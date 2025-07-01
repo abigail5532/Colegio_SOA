@@ -2,9 +2,10 @@
 $idalum = isset($_GET['idalum']) ? $_GET['idalum'] : '';
 
 // Inicializar variables
+$dni = '';
 $nombres = '';
 $apellidos = '';
-$dni = '';
+$email = '';
 $genero = '';
 $fecnacimiento = '';
 $direccion = '';
@@ -29,9 +30,10 @@ if ($idalum) {
     $data = $result->fetch_assoc();
     
     if ($data) {
+        $dni = $data['dni'];
         $nombres = $data['nombres'];
         $apellidos = $data['apellidos'];
-        $dni = $data['dni'];
+        $email = $data['email'];
         $genero = $data['genero'];
         $fecnacimiento = $data['fecnacimiento'];
         $direccion = $data['direccion'];
@@ -63,7 +65,7 @@ if ($idalum) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Verificar si los campos están vacíos
-    if (empty($_POST['nombresalum']) || empty($_POST['apellidosalum']) || empty($_POST['dnialum']) || empty($_POST['generoalum']) || empty($_POST['fecnacimientoalum']) || empty($_POST['direccionalum']) || empty($_POST['aulaalum']) || empty($_POST['estadoalum'])) {
+    if (empty($_POST['dnialum']) || empty($_POST['nombresalum']) || empty($_POST['apellidosalum']) || empty($_POST['email']) || empty($_POST['generoalum']) || empty($_POST['fecnacimientoalum']) || empty($_POST['direccionalum']) || empty($_POST['aulaalum'])) {
         echo "<script>
                 document.addEventListener('DOMContentLoaded', function() {
                     Swal.fire({
@@ -75,14 +77,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 });
               </script>";
     } else {
+        $dni = $_POST['dnialum'];
         $nombres = $_POST['nombresalum'];
         $apellidos = $_POST['apellidosalum'];
-        $dni = $_POST['dnialum'];
+        $email = $_POST['email'];
         $genero = $_POST['generoalum'];
         $fecnacimiento = $_POST['fecnacimientoalum'];
         $direccion = $_POST['direccionalum'];
         $aula = $_POST['aulaalum'];
-        $estado = $_POST['estadoalum'];
+        $estado = "Activo";
         $dnima = isset($_POST['dnima']) ? $_POST['dnima'] : '';
         $nombresma = isset($_POST['nombresma']) ? $_POST['nombresma'] : '';
         $telefonoma = isset($_POST['telefonoma']) ? $_POST['telefonoma'] : '';
@@ -115,8 +118,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Cifrar la contraseña
                 $clave = password_hash($_POST['clavealum'], PASSWORD_DEFAULT);
                 // Insertar nuevo
-                $stmt = $conexion->prepare("INSERT INTO alumnos (nombres, apellidos, dni, genero, fecnacimiento, direccion, clave, aula, dnima, nombresma, telefonoma, dnipa, nombrespa, telefonopa, dniapod, nombresapod, telefonoapod, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-                $stmt->bind_param("ssssssssssssssssss", $nombres, $apellidos, $dni, $genero, $fecnacimiento, $direccion, $clave, $aula, $dnima, $nombresma, $telefonoma, $dnipa, $nombrespa, $telefonopa, $dniapod, $nombresapod, $telefonoapod, $estado);
+                $stmt = $conexion->prepare("INSERT INTO alumnos (dni, nombres, apellidos, email, genero, fecnacimiento, direccion, clave, aula, dnima, nombresma, telefonoma, dnipa, nombrespa, telefonopa, dniapod, nombresapod, telefonoapod, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                $stmt->bind_param("sssssssssssssssssss", $dni, $nombres, $apellidos, $email, $genero, $fecnacimiento, $direccion, $clave, $aula, $dnima, $nombresma, $telefonoma, $dnipa, $nombrespa, $telefonopa, $dniapod, $nombresapod, $telefonoapod, $estado);
                 
                 if ($stmt->execute()) {
                     echo "<script>
@@ -149,8 +152,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         } else {
             // Actualizar registro
-            $sql_update = "UPDATE alumnos SET nombres = ?, apellidos = ?, dni = ?, genero = ?, fecnacimiento = ?, direccion = ?, aula = ?, dnima = ?, nombresma = ?, telefonoma = ?, dnipa = ?, nombrespa = ?, telefonopa = ?, dniapod = ?, nombresapod = ?, telefonoapod = ?, estado = ?";
-            $params = [$nombres, $apellidos, $dni, $genero, $fecnacimiento, $direccion, $aula, $dnima, $nombresma, $telefonoma, $dnipa, $nombrespa, $telefonopa, $dniapod, $nombresapod, $telefonoapod, $estado];
+            $sql_update = "UPDATE alumnos SET dni = ?, nombres = ?, apellidos = ?, email = ?, genero = ?, fecnacimiento = ?, direccion = ?, aula = ?, dnima = ?, nombresma = ?, telefonoma = ?, dnipa = ?, nombrespa = ?, telefonopa = ?, dniapod = ?, nombresapod = ?, telefonoapod = ?";
+            $params = [$dni, $nombres, $apellidos, $email, $genero, $fecnacimiento, $direccion, $aula, $dnima, $nombresma, $telefonoma, $dnipa, $nombrespa, $telefonopa, $dniapod, $nombresapod, $telefonoapod];
             $types = "sssssssssssssssss";
 
             // Solo actualizar la contraseña si se ha ingresado una nueva

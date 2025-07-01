@@ -24,14 +24,14 @@ include_once "../Includes/Header.php";
                             <th>ID</th>
                             <th>Área Curricular</th>
                             <th>Asignatura</th>
-                            <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php include('../Includes/Connection.php');
                         $query = mysqli_query($conexion, "SELECT a.idasig, a.nombre, a.estado, c.nombre AS areacurricular FROM asignaturas a
-                        INNER JOIN area_curricular c ON a.areacurricular = c.idarea");
+                        INNER JOIN area_curricular c ON a.areacurricular = c.idarea
+                        where estado= 'Activo'");
                         $result = mysqli_num_rows($query);
                         if ($result > 0) {
                             while ($data = mysqli_fetch_assoc($query)) { ?>
@@ -39,7 +39,6 @@ include_once "../Includes/Header.php";
                             <td><?php echo $data['idasig']; ?></td>
                             <td><?php echo $data['areacurricular']; ?></td>
                             <td><?php echo $data['nombre']; ?></td>
-                            <td><?php echo $data['estado']; ?></td>
                             <td>
                                 <a href="addEvaluacion.php?idasig=<?php echo $data['idasig']; ?>" class="btn" style="background-color: #3357FF; color: white;"><i class='fas fa-book'></i></a>
                                 <a href="addAsignaturas.php?idasig=<?php echo $data['idasig']; ?>" class="btn" style="background-color: #71B600; color: white;"><i class='fas fa-edit'></i></a>

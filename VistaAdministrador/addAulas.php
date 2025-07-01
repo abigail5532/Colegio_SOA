@@ -21,7 +21,7 @@ include_once "../Includes/Header.php";
                 </div>
                 <!-- Card Body -->
                 <div class="card-body" style="color: black;">
-                    <form id="formSecciones" method="post">
+                    <form id="formSecciones" method="post" class="needs-validation" novalidate>
                         <div class="form-group">
                             <input type="hidden" name="idaula" id="idaula">
                             <label class="col-form-label">Año académico:</label>
@@ -29,8 +29,8 @@ include_once "../Includes/Header.php";
                         </div>
                         <div class="form-group">
                             <label class="col-form-label">Tutor(a):</label>
-                            <select class="form-control" name="tutoraula" id="tutoraula">
-                                <option selected disabled> -- Seleccionar docente-- </option>
+                            <select class="form-control" name="tutoraula" id="tutoraula"  required>
+                                <option  value="" selected disabled> -- Seleccionar docente-- </option>
                                 <?php
                                 $query = mysqli_query($conexion, "SELECT * FROM docentes");
                                 while ($row = mysqli_fetch_assoc($query)) {
@@ -42,11 +42,11 @@ include_once "../Includes/Header.php";
                         </div>
                         <div class="form-group">
                             <label class="col-form-label">Sección:</label>
-                            <input type="text" class="form-control" name="seccionaula" id="seccionaula" value="<?php echo $seccion; ?>">
+                            <input type="text" class="form-control" name="seccionaula" id="seccionaula" value="<?php echo $seccion; ?>"  required>
                         </div>
                         <div class="form-group">
                             <label class="col-form-label">Aforo:</label>
-                            <input type="number" class="form-control" name="aforoaula" id="aforoaula" value="<?php echo $aforo; ?>">
+                            <input type="number" class="form-control" name="aforoaula" id="aforoaula" value="<?php echo $aforo; ?>"  required>
                         </div>
                         <div class="modal-footer">
                             <a href="tblGrados.php" class="btn" style="background-color: red; color: white;">Cancelar </a>
@@ -101,6 +101,24 @@ include_once "../Includes/Header.php";
     </div>
 
 </div>
+
+<script>
+ // Bootstrap validation
+    (() => {
+        'use strict';
+        const forms = document.querySelectorAll('.needs-validation');
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+
+</script>
 
 <?php
 include_once "../Includes/Footer.php";
