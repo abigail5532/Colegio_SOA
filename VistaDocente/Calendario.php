@@ -3,44 +3,28 @@ session_start();
 $id_user = $_SESSION['idUser'];
 include('../Includes/Connection.php');
 include('../Includes/HeaderDoc.php');
-$SqlEventos   = ("SELECT 
-c.idcita, 
-CONCAT(a.nombres, ' ', a.apellidos) AS alumno_nombre, 
-c.reunion,
-c.fecha, 
-c.horai, 
-c.horaf, 
-c.nomfamiliar, 
-c.descripcion, 
-c.estado 
-FROM 
-cita AS c
-JOIN 
-alumnos AS a 
-ON 
-c.alumno = a.idalum 
-WHERE 
-c.docente = '$id_user' 
-AND c.estado = 'Reservado'
-");
+
+$SqlEventos = ("SELECT c.idcita, CONCAT(a.nombres, ' ', a.apellidos) AS alumno_nombre, 
+c.reunion, c.fecha, c.horai, c.horaf, c.nomfamiliar, c.descripcion, c.link,
+c.estado FROM cita AS c JOIN alumnos AS a ON c.alumno = a.idalum
+WHERE c.docente = '$id_user' AND c.estado = 'Reservado'");
 $resulEventos = mysqli_query($conexion, $SqlEventos);
 ?>
 
-
 <!-- Begin Page Content -->
 <div class="container-fluid">
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="head-table m-0 font-weight-bold">Horario Escolar</h6>
-        </div>
-        <div class="card-body" style="color: black;">
-        <div class="container">
-          <div class="row">
-            <div id="calendar"></div>
-          </div>
-        </div>
-        </div>
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="head-table m-0 font-weight-bold">Horario Escolar</h6>
     </div>
+    <div class="card-body" style="color: black;">
+      <div class="container">
+        <div class="row">
+          <div id="calendar"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- Begin Modal -->
@@ -54,24 +38,25 @@ $resulEventos = mysqli_query($conexion, $SqlEventos);
         </button>
       </div>
       <div class="modal-body">
-      <p class="mb-1"><strong>Reunion:</strong> <span name="reunion" class="text-wrap"></span></p>
-          <p class="mb-1"><strong>Fecha:</strong> <span name="fecha" class="text-wrap"></span></p>
-          <p class="mb-1"><strong>Hora:</strong> <span name="hora" class="text-wrap"></span></p>
-          <p class="mb-1"><strong>Alumno:</strong> <span name="alumno" class="text-wrap"></span></p>
-          <p class="mb-3"><strong>Apoderado:</strong> <span name="familiar" class="text-wrap"></span></p>
-          <textarea class="form-control" name="detalles" style="color: black;" rows="6" disabled></textarea>
+        <p class="mb-1"><strong>Reunión:</strong> <span name="reunion" class="text-wrap"></span></p>
+        <p class="mb-1"><strong>Fecha:</strong> <span name="fecha" class="text-wrap"></span></p>
+        <p class="mb-1"><strong>Hora:</strong> <span name="hora" class="text-wrap"></span></p>
+        <p class="mb-1"><strong>Alumno:</strong> <span name="alumno" class="text-wrap"></span></p>
+        <p class="mb-1"><strong>Apoderado:</strong> <span name="familiar" class="text-wrap"></span></p>
+        <p class="mb-3"><strong>Link de reunión:</strong> 
+          <a href="#" name="link" class="text-wrap" target="_blank"></a>
+        </p>
+        <textarea class="form-control" name="detalles" style="color: black;" rows="6" disabled></textarea>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn" style="background-color: #71B600; color: white;" data-dismiss="modal">Close</button>
+        <button type="button" class="btn" style="background-color: #71B600; color: white;" data-dismiss="modal">Cerrar</button>
       </div>
     </div>
   </div>
 </div>
 <!-- End Modal -->
 
-
-
-<script src ="../js/jsCalendar/jquery-3.0.0.min.js"> </script>
+<script src ="../js/jsCalendar/jquery-3.0.0.min.js"></script>
 <script src="../js/jsCalendar/popper.min.js"></script>
 <script src="../js/jsCalendar/bootstrap.min.js"></script>
 <script type="text/javascript" src="../js/jsCalendar/moment.min.js"></script>	
@@ -79,7 +64,7 @@ $resulEventos = mysqli_query($conexion, $SqlEventos);
 <script src='../js/jsCalendar/es.js'></script>
 
 <script type="text/javascript">
- $(document).ready(function() {
+$(document).ready(function() {
   $("#calendar").fullCalendar({
     header: {
       left: "prev,next today",
@@ -88,19 +73,17 @@ $resulEventos = mysqli_query($conexion, $SqlEventos);
     },
 
     locale: 'es',
-
     defaultView: "month",
-    navLinks: true, 
+    navLinks: true,
     editable: true,
-    eventLimit: true, 
+    eventLimit: true,
     selectable: true,
     selectHelper: false,
     allDaySlot: false,
-      
+
     events: [
-      <?php
-       while($dataEvento = mysqli_fetch_array($resulEventos)){ ?>
-          {
+      <?php while($dataEvento = mysqli_fetch_array($resulEventos)){ ?>
+        {
           _id: '<?php echo $dataEvento['idcita']; ?>',
           title: 'Reunión',
           start: '<?php echo $dataEvento['fecha']; ?>T<?php echo $dataEvento['horai']; ?>',
@@ -109,29 +92,25 @@ $resulEventos = mysqli_query($conexion, $SqlEventos);
           description: '<?php echo $dataEvento['descripcion']; ?>',
           student: '<?php echo $dataEvento['alumno_nombre']; ?>',
           family: '<?php echo $dataEvento['nomfamiliar']; ?>',
-          reunion: '<?php echo $dataEvento['reunion']; ?>'
-          },
-        <?php } ?>
+          reunion: '<?php echo $dataEvento['reunion']; ?>',
+          link: '<?php echo $dataEvento['link']; ?>'
+        },
+      <?php } ?>
     ],
 
-    //Modal
-    eventClick:function(event){
-      var idEvento = event._id;
-      $('input[name=idEvento').val(idEvento);
-      $('span[name=reunion').text(event.reunion);
-      $('span[name=alumno').text(event.student);
-      $('span[name=familiar').text(event.family);
-      $('span[name=fecha').text(event.start.format('DD-MM-YYYY'));
-      $('span[name=hora').text(event.start.format('HH:mm') + ' - ' + event.end.format('HH:mm'));
-      $('textarea[name=detalles').text(event.description);
+    eventClick: function(event) {
+      $('span[name=reunion]').text(event.reunion);
+      $('span[name=alumno]').text(event.student);
+      $('span[name=familiar]').text(event.family);
+      $('span[name=fecha]').text(event.start.format('DD-MM-YYYY'));
+      $('span[name=hora]').text(event.start.format('HH:mm') + ' - ' + event.end.format('HH:mm'));
+      $('a[name=link]').attr('href', event.link).text(event.link);
+      $('textarea[name=detalles]').text(event.description);
       $("#modalinfo").modal();
-    },
+    }
 
   });
- });
+});
 </script>
 
-<!-- /.End Page Content -->
-<?php
-require_once "../Includes/FooterDoc.php";
-?>
+<?php require_once "../Includes/FooterDoc.php"; ?>
