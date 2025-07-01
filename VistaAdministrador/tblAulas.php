@@ -38,7 +38,6 @@ include('../Includes/Header.php');
                             <td><?php echo $row['grado'] . ' ' . $row['seccion']; ?></td>
                             <td><?php echo $row['tutor']; ?></td>
                             <td>
-                                <a href="HorarioAula.php?idaula=<?php echo $row['idaula']; ?>" class="btn" style="background-color: #A833FF; color: white;"><i class="fa-solid fa-calendar-days"></i></a>
                                 <a href="addAsignarGradoAsignatura.php?idaula=<?php echo $row['idaula']; ?>" class="btn" style="background-color: #3357FF; color: white;"><i class="fa-solid fa-book"></i></a>
                                 <a href="../Reports/ExcelAulas.php?idaula=<?php echo $row['idaula']; ?>" class="btn" style="background-color: #71B600; color: white;"><i class="fa-solid fa-file-excel"></i></a>
                                 <a href="../Reports/pdfAulas.php?idaula=<?php echo $row['idaula']; ?>" class="btn" style="background-color: red; color: white;"><i class="fa-solid fa-file-pdf"></i></a>

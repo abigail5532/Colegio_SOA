@@ -42,7 +42,7 @@ $stmt2 = $conexion->prepare($sql2);
 $stmt2->bind_param("sss", $token, $expiry, $email);
 $stmt2->execute();
 
-$enlace = "http://localhost/Colegio_SOA/restablecer.php?rol=$rol_encontrado&token=$token";
+$enlace = "http://localhost/archivosvisual/cursosoa/Colegio_SOA/restablecer.php?rol=$rol_encontrado&token=$token";
 
 $mail = new PHPMailer(true);
 
