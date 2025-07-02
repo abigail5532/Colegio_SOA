@@ -162,6 +162,7 @@ if (!empty($_SESSION['active'])) {
 
                             <br>
                             <input name="btningresar" class="btn" type="submit" value="INICIAR SESIÓN">
+                            <a href="recuperar_contrasena.php" class="btn-link" style="color: #007BFF;">Olvidé mi contraseña</a>
                         </form>
                     </div>
                 </div>
