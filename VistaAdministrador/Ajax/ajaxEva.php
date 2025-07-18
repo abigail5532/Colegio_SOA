@@ -4,9 +4,11 @@ include('../Includes/Connection.php');
 $idasig = isset($_POST['idasig']) ? intval($_POST['idasig']) : 0;
 $bimestre = isset($_POST['bimestre']) ? intval($_POST['bimestre']) : 0;
 $evaluacion = isset($_POST['evaluacion']) ? trim($_POST['evaluacion']) : '';
+$fechainicio = isset($_POST['fechainicio']) ? trim($_POST['fechainicio']) : '';
+$fechafin = isset($_POST['fechafin']) ? trim($_POST['fechafin']) : '';
 
 if ($idasig && $bimestre && !empty($evaluacion)) {
-    $stmt = $conexion->prepare("INSERT INTO evaluaciones (idasig, bimestre, evaluacion) VALUES (?, ?, ?)");
+    $stmt = $conexion->prepare("INSERT INTO evaluaciones (idasig, bimestre, evaluacion, fechainicio, fechafin) VALUES (?, ?, ?, ?, ?)");
     $stmt->bind_param("iis", $idasig, $bimestre, $evaluacion);
 
     if ($stmt->execute()) {

@@ -38,7 +38,7 @@ $idasig = isset($_GET['idasig']) ? intval($_GET['idasig']) : 0;
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="col-form-label">Evaluacion:</label>
+                            <label class="col-form-label">Evaluación:</label>
                             <input type="text" class="form-control" name="evaluacion" id="evaluacion">
                         </div>
                         <div class="modal-footer">
