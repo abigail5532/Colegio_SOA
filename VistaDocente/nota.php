@@ -10,6 +10,7 @@ $iddoc = $_SESSION['idUser']; // Get the iddoc from the session
 
 <!-- Begin Page Content -->
 <div class="container-fluid">
+    
     <!-- Content Row -->
     <div class="row">
         <!-- Evaluaciones -->
@@ -37,6 +38,7 @@ $iddoc = $_SESSION['idUser']; // Get the iddoc from the session
                             <thead>
                                 <tr>
                                     <th>Evaluación</th>
+                                    <th>Porcentaje</th>
                                     <th>Nota</th>
                                     <th>Acciones</th>
                                 </tr>
@@ -67,160 +69,196 @@ $iddoc = $_SESSION['idUser']; // Get the iddoc from the session
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script>
+    
     function filtroEvaluaciones() {
-        var bimestre = document.getElementById('bimestre').value;
-        var idalum = "<?php echo $idalum;?>";
-        var idasig = "<?php echo $idasig;?>";
-        var iddoc = "<?php echo $iddoc;?>";
-        
-        if (bimestre) {
-            // AJAX call to get the evaluations for the selected bimestre
-            fetch(`getEvaluaciones.php?bimestre=${bimestre}&idalum=${idalum}&idasig=${idasig}&iddoc=${iddoc}`)
-              .then(response => response.json())
-              .then(data => {
-                    let tableBody = document.querySelector('#tblEvaluaciones tbody');
-                    tableBody.innerHTML = '';
-                    data.forEach(evaluacion => {
-                        let row = `<tr>
+    var bimestre = document.getElementById('bimestre').value;
+    var idalum = "<?php echo $idalum;?>";
+    var idasig = "<?php echo $idasig;?>";
+    var iddoc = "<?php echo $iddoc;?>";
+
+    if (bimestre) {
+        // Convocatoria AJAX para obtener las evaluaciones del bimestre seleccionado
+        fetch(`getEvaluaciones.php?bimestre=${bimestre}&idalum=${idalum}&idasig=${idasig}&iddoc=${iddoc}`)
+            .then(response => response.json())
+            .then(data => {
+                let tableBody = document.querySelector('#tblEvaluaciones tbody');
+                tableBody.innerHTML = '';
+                data.forEach(evaluacion => {
+                    let row = `<tr>
                                     <td>${evaluacion.nombre}</td>
+                                    <td>${evaluacion.porcentaje}%</td>
                                     <td>
-                                        <input type="number" class="form-control nota" data-eva="${evaluacion.ideva}" value="${evaluacion.nota || 0}" min="0" max="20" disabled>
+                                        <input type="number" class="form-control nota" data-eva="${evaluacion.ideva}" data-porcentaje="${evaluacion.porcentaje}" value="${evaluacion.nota || 0}" min="0" max="20" disabled>
                                     </td>
                                     <td>
                                         <button class="btn btn-primary" onclick="editarNota(this)">Editar</button>
                                         <button class="btn btn-success" onclick="guardarNota(this, ${evaluacion.ideva})" style="display:none;">Guardar</button>
                                     </td>
-                                   </tr>`;
-                        tableBody.insertAdjacentHTML('beforeend', row);
-                    });
-                    calcularPromedio();
-                })
-              .catch(error => console.error('Error al obtener las evaluaciones:', error));
-        }
-    }
-    
-    function calcularPromedio() {
-        let notas = document.querySelectorAll('.nota');
-        let total = 0;
-        notas.forEach(nota => {
-            total += parseFloat(nota.value || 0);
-        });
-        let promedio = notas.length ? (total / notas.length).toFixed(2) : 0;
-        document.getElementById('promedio').textContent = promedio;
-    }
-
-    function editarNota(button) {
-        let row = button.closest('tr');
-        let notaInput = row.querySelector('.nota');
-        let guardarButton = row.querySelector('.btn-success');
-        
-        notaInput.disabled = false;
-        button.style.display = 'none';
-        guardarButton.style.display = 'inline-block';
-    }
-
-    function guardarNota(button, ideva) {
-        let row = button.closest('tr');
-        let notaInput = row.querySelector('.nota');
-        let iddoc = "<?php echo $iddoc; ?>";
-        let idalum = "<?php echo $idalum; ?>";
-        let idasig = "<?php echo $idasig; ?>";
-        let bimestre = document.getElementById('bimestre').value;
-        let notaValue = notaInput.value;
-
-        fetch('guardarNotas.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                iddoc: iddoc,
-                idalum: idalum,
-                idasig: idasig,
-                bimestre: bimestre,
-                ideva: ideva,
-                nota: notaValue
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if(data.success) {
-                notaInput.disabled = true;
-                button.style.display = 'none';
-                row.querySelector('.btn-primary').style.display = 'inline-block';
+                                </tr>`;
+                    tableBody.insertAdjacentHTML('beforeend', row);
+                });
                 calcularPromedio();
-                Swal.fire({
-                    title: 'Éxito',
-                    text: 'Nota guardada correctamente',
-                    icon: 'success',
-                    confirmButtonText: 'Ok'
-                });
-            } else {
-                Swal.fire({
-                    title: 'Error',
-                    text: 'Error al guardar la nota',
-                    icon: 'error',
-                    confirmButtonText: 'Ok'
-                });
-            }
+            })
+            .catch(error => console.error('Error al obtener las evaluaciones:', error));
+    }
+}
+
+function editarNota(button) {
+    let row = button.closest('tr');
+    let notaInput = row.querySelector('.nota');
+    let guardarButton = row.querySelector('.btn-success');
+    
+    notaInput.disabled = false;
+    button.style.display = 'none';
+    guardarButton.style.display = 'inline-block';
+}
+
+function guardarNota(button, ideva) {
+    let row = button.closest('tr');
+    let notaInput = row.querySelector('.nota');
+    let iddoc = "<?php echo $iddoc; ?>";
+    let idalum = "<?php echo $idalum; ?>";
+    let idasig = "<?php echo $idasig; ?>";
+    let bimestre = document.getElementById('bimestre').value;
+    let notaValue = notaInput.value;
+
+    fetch('guardarNotas.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            iddoc: iddoc,
+            idalum: idalum,
+            idasig: idasig,
+            bimestre: bimestre,
+            ideva: ideva,
+            nota: notaValue
         })
-        .catch(error => {
-            console.error('Error al guardar la nota:', error);
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.success) {
+            notaInput.disabled = true;
+            button.style.display = 'none';
+            row.querySelector('.btn-primary').style.display = 'inline-block';
+            calcularPromedio();
+            Swal.fire({
+                title: 'Éxito',
+                text: 'Nota guardada correctamente',
+                icon: 'success',
+                confirmButtonText: 'Ok'
+            });
+        } else {
             Swal.fire({
                 title: 'Error',
                 text: 'Error al guardar la nota',
                 icon: 'error',
                 confirmButtonText: 'Ok'
             });
+        }
+    })
+    .catch(error => {
+        console.error('Error al guardar la nota:', error);
+        Swal.fire({
+            title: 'Error',
+            text: 'Error al guardar la nota',
+            icon: 'error',
+            confirmButtonText: 'Ok'
         });
+    });
+}
+
+
+function calcularPromedio() {
+    let notas = document.querySelectorAll('.nota');
+    let total = 0;
+    let totalPorcentaje = 0;
+
+    notas.forEach(nota => {
+        let porcentaje = parseFloat(nota.dataset.porcentaje) || 0;
+        let valorNota = parseFloat(nota.value) || 0;
+        total += (valorNota * (porcentaje / 100));
+        totalPorcentaje += porcentaje;
+    });
+
+    let promedio = totalPorcentaje ? (total / (totalPorcentaje / 100)).toFixed(2) : 0;
+    document.getElementById('promedio').textContent = promedio;
+}
+
+function guardarPromedio() {
+    let notas = document.querySelectorAll('.nota');
+    let todasGuardadas = true;
+    
+    notas.forEach(nota => {
+        if (nota.value === "" || nota.value === "0") {
+            todasGuardadas = false;
+        }
+    });
+
+    if (!todasGuardadas) {
+        Swal.fire({
+            title: 'Advertencia',
+            text: 'Debe guardar todas las evaluaciones antes de guardar el promedio',
+            icon: 'warning',
+            confirmButtonText: 'Ok'
+        });
+        return;
     }
 
-    function guardarPromedio() {
-        let promedio = document.getElementById('promedio').textContent;
-        let iddoc = "<?php echo $iddoc; ?>";
-        let idalum = "<?php echo $idalum; ?>";
-        let idasig = "<?php echo $idasig; ?>";
-        let bimestre = document.getElementById('bimestre').value;
+    let promedio = document.getElementById('promedio').textContent;
+    let iddoc = "<?php echo $iddoc; ?>";
+    let idalum = "<?php echo $idalum; ?>";
+    let idasig = "<?php echo $idasig; ?>";
+    let bimestre = document.getElementById('bimestre').value;
 
-        fetch('guardarPromedio.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                iddoc: iddoc,
-                idalum: idalum,
-                idasig: idasig,
-                bimestre: bimestre,
-                promedio: promedio
-            })
+    fetch('guardarPromedio.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            iddoc: iddoc,
+            idalum: idalum,
+            idasig: idasig,
+            bimestre: bimestre,
+            promedio: promedio
         })
-        .then(response => response.json())
-        .then(data => {
-            if(data.success) {
-                Swal.fire({
-                    title: 'Éxito',
-                    text: 'Promedio guardado correctamente',
-                    icon: 'success',
-                    confirmButtonText: 'Ok'
-                });
-            } else {
-                Swal.fire({
-                    title: 'Error',
-                    text: 'Error al guardar el promedio',
-                    icon: 'error',
-                    confirmButtonText: 'Ok'
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Error al guardar el promedio:', error);
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            Swal.fire({
+                title: 'Guardar Promedio',
+        text: "¿Estás seguro de que quieres guardar?, solo tienes una oportunidad",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí',
+        cancelButtonText: 'No'
+            });
+        } else {
             Swal.fire({
                 title: 'Error',
                 text: 'Error al guardar el promedio',
                 icon: 'error',
                 confirmButtonText: 'Ok'
             });
+        }
+    })
+    .catch(error => {
+        console.error('Error al guardar el promedio:', error);
+        Swal.fire({
+            title: 'Error',
+            text: 'Error al guardar el promedio',
+            icon: 'error',
+            confirmButtonText: 'Ok'
         });
-    }
+    });
+}
+
 </script>
 
 <?php
 include_once "../Includes/Footer.php";
 ?>
+
+
+
