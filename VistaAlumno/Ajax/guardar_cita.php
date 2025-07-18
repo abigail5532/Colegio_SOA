@@ -39,29 +39,50 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     $horario_id = $row_horario['id'];
 
-    // Insertar los datos en la tabla de citas
-    $query_cita = "INSERT INTO cita (alumno, docente, reunion, fecha, horai, horaf, nomfamiliar, descripcion,  estado) VALUES ('$alumno', '$docente_id', '$reunion', '$fecha', '$horai', '$horaf', '$nombrefa', '$descripcion', '$estado')";
-    if (mysqli_query($conexion, $query_cita)) {
-        // Actualizar el estado del horario
-        $query_update_horario = "UPDATE horario SET estado = 'Inactivo' WHERE id = '$horario_id'";
-        if (!mysqli_query($conexion, $query_update_horario)) {
-            die("Error al actualizar el horario: " . mysqli_error($conexion));
+// Insertar los datos en la tabla de citas
+$query_cita = "INSERT INTO cita (alumno, docente, reunion, fecha, horai, horaf, nomfamiliar, descripcion, estado) 
+               VALUES ('$alumno', '$docente_id', '$reunion', '$fecha', '$horai', '$horaf', '$nombrefa', '$descripcion', '$estado')";
+if (mysqli_query($conexion, $query_cita)) {
+    // Obtener el ID de la cita recién insertada
+    $id_cita = mysqli_insert_id($conexion);
+
+    // Actualizar el estado del horario
+    $query_update_horario = "UPDATE horario SET estado = 'Inactivo' WHERE id = '$horario_id'";
+    if (!mysqli_query($conexion, $query_update_horario)) {
+        die("Error al actualizar el horario: " . mysqli_error($conexion));
+    }
+
+    // INSERTAR LA NOTIFICACIÓN con id_cita
+    $mensaje_notif = "Nueva reunión reservada para el $fecha de $horai a $horaf.";
+    $tipo_notif = "reunion_confirmada";
+
+    $stmt_notif = mysqli_prepare($conexion, "INSERT INTO notificaciones (id_docente, tipo, mensaje, leido, fecha, id_cita) 
+                                             VALUES (?, ?, ?, 0, NOW(), ?)");
+    if ($stmt_notif) {
+        mysqli_stmt_bind_param($stmt_notif, "issi", $docente_id, $tipo_notif, $mensaje_notif, $id_cita);
+        if (!mysqli_stmt_execute($stmt_notif)) {
+            die("Error al insertar la notificación: " . mysqli_error($conexion));
         }
-        // Mostrar mensaje de éxito y redireccionar
-        echo "<script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    Swal.fire({
-                        title: 'Éxito',
-                        text: 'Cita registrada exitosamente.',
-                        icon: 'success',
-                        confirmButtonText: 'Ok'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = 'tblReuniones.php';
-                        }
-                    });
+        mysqli_stmt_close($stmt_notif);
+    } else {
+        die("Error al preparar la inserción de notificación: " . mysqli_error($conexion));
+    }
+
+    // Mostrar mensaje de éxito y redireccionar
+    echo "<script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    title: 'Éxito',
+                    text: 'Cita registrada exitosamente.',
+                    icon: 'success',
+                    confirmButtonText: 'Ok'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = 'tblReuniones.php';
+                    }
                 });
-              </script>";
+            });
+          </script>";
     } else {
         // Mostrar mensaje de error
         echo "<script>
@@ -82,4 +103,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     mysqli_close($conexion);
 }
-?>

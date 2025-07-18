@@ -8,6 +8,7 @@ $id_user = $_SESSION['idUser'];
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -31,7 +32,7 @@ $id_user = $_SESSION['idUser'];
     <link href="../Styles/clockpicker.css" rel="stylesheet">
     <!-- Select -->
     <link rel="stylesheet" href="../Styles/jquery-ui.min.css">
-    
+
 </head>
 
 <body id="page-top" class="esto">
@@ -115,6 +116,26 @@ $id_user = $_SESSION['idUser'];
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
+                        <!-- Nav Item - Alerts -->
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-bell fa-fw"></i>
+                                <!-- Counter - Alerts -->
+                                <span class="badge badge-danger badge-counter" id="count_notif"></span>
+                            </a>
+                            <!-- Dropdown - Alerts -->
+                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="alertsDropdown" style="max-height: 300px; overflow-y: auto;">
+                                <h6 class="dropdown-header">
+                                    Notificaciones
+                                </h6>
+                                <div id="notificaciones_content">
+                                    <p class="dropdown-item text-center small text-gray-500">Cargando...</p>
+                                </div>
+                            </div>
+                        </li>
+
                         <div class="topbar-divider d-none d-sm-block"></div>
 
                         <!-- Nav Item - User Information -->
@@ -122,7 +143,7 @@ $id_user = $_SESSION['idUser'];
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">
-                                    <?php echo $_SESSION["apellidos"];?>, <?php echo $_SESSION["nombres"];?> 
+                                    <?php echo $_SESSION["apellidos"]; ?>, <?php echo $_SESSION["nombres"]; ?>
                                 </span>
                                 <img class="img-profile rounded-circle"
                                     src="../Imagenes/administrador.png">
@@ -140,4 +161,88 @@ $id_user = $_SESSION['idUser'];
                     </ul>
 
                 </nav>
+                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                <script>
+                    function cargarNotificaciones() {
+                        $.ajax({
+                            url: '../Includes/get_notificaciones.php',
+                            method: 'GET',
+                            dataType: 'json',
+                            success: function(data) {
+                                var content = '';
+                                var count = 0;
+
+                                if (data.length > 0) {
+                                    data.forEach(function(n) {
+                                        // Contar no leídos
+                                        if (n.leido == 0) count++;
+
+                                        content += '<a class="dropdown-item d-flex align-items-center" href="#" onclick="verNotificacion(' + n.id + ')">';
+                                        content += '<div class="mr-3">';
+                                        content += '<div class="icon-circle bg-primary">';
+                                        content += '<i class="fas fa-info text-white"></i>';
+                                        content += '</div></div>';
+                                        content += '<div>';
+                                        content += '<div class="small text-gray-500">' + n.fecha + '</div>';
+                                        content += '<span class="' + (n.leido == 0 ? 'font-weight-bold' : '') + '">' + n.mensaje + '</span>';
+                                        content += '</div></a>';
+                                    });
+                                } else {
+                                    content = '<p class="dropdown-item text-center small text-gray-500">Sin notificaciones</p>';
+                                }
+
+                                $('#notificaciones_content').html(content);
+                                $('#count_notif').text(count > 0 ? count : '');
+                            },
+                            error: function(xhr, status, error) {
+                                console.log('Error al cargar notificaciones:', error);
+                            }
+                        });
+                    }
+
+                    function verNotificacion(id) {
+                        $('#detalleNotificacion').html('Cargando...');
+                        $('#modalNotificacion').modal('show');
+
+                        fetch('../Includes/detalle_notificacion.php?id=' + id)
+                            .then(response => response.text())
+                            .then(data => {
+                                $('#detalleNotificacion').html(data);
+                                cargarNotificaciones(); // Actualiza el contador
+                            })
+                            .catch(error => {
+                                $('#detalleNotificacion').html('Error al cargar la notificación.');
+                                console.error(error);
+                            });
+                    }
+
+
+
+                    $(document).ready(function() {
+                        cargarNotificaciones(); // Cargar al iniciar
+
+                        // Actualizar cada 20 segundos
+                        setInterval(cargarNotificaciones, 20000);
+                    });
+                </script>
+
+                <!-- Modal para Detalle de Notificación -->
+                <div class="modal fade" id="modalNotificacion" tabindex="-1" role="dialog" aria-labelledby="modalNotifLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-scrollable" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalNotifLabel">Detalle de Notificación</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body" id="detalleNotificacion">Cargando notificación...</div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
                 <!-- End of Topbar -->
