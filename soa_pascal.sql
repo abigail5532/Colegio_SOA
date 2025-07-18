@@ -89,7 +89,7 @@ CREATE TABLE `alumnos` (
 
 INSERT INTO `alumnos` (`idalum`, `nombres`, `apellidos`, `dni`, `genero`, `fecnacimiento`, `direccion`, `clave`, `aula`, `telefonoapod`, `nombresapod`, `dniapod`, `telefonopa`, `nombrespa`, `dnipa`, `telefonoma`, `nombresma`, `dnima`, `estado`, `recovery_token`, `token_expiry`, `email`, `codigo_otp`, `otp_expiracion`) VALUES
 (1, 'Gary Gerardo', 'Aguilar Campos', '73829104', 'M', '2010-03-17', 'Serrán', '$2y$10$GsxK7a/3xJSmbwvGAITwQ.WtALRdob5B97IL4vvPD6AFgieZ6xw6q', 1, '', '', '', '', '', '', '', '', '', 'Activo', NULL, NULL, 'rubennarvaez032@gmail.com', NULL, NULL),
-(2, 'Yamile', 'Alegrea Guirre', '13158402', 'F', '2011-11-13', 'San Juan', '$2y$10$REfrW4jI./JhhJBzA.hezu3TggrgQKPCThLXPB8xIzrb7SKaJ88/K', 1, '', '', '', '', '', '', '', '', '', 'Activo', NULL, NULL, NULL, NULL, NULL),
+(2, 'Yamile', 'Alegrea Guirre', '13158402', 'F', '2011-11-13', 'San Juan', '$2y$10$REfrW4jI./JhhJBzA.hezu3TggrgQKPCThLXPB8xIzrb7SKaJ88/K', 1, '', '', '', '', '', '', '', '', '', 'Activo', NULL, NULL, 'xtipte423'', NULL, NULL),
 (3, 'Antoanella', 'Allende Vega', '58291740', 'F', '2011-11-13', '', '', 1, '', '', '', '', '', '', '', '', '', 'Activo', NULL, NULL, NULL, NULL, NULL),
 (4, 'Alejandro', 'Basaldua Cueva', '49172630', 'M', '2010-11-13', '', '', 1, '', '', '', '', '', '', '', '', '', 'Activo', NULL, NULL, NULL, NULL, NULL),
 (5, 'Dylan', 'Bazan Huerta', '01287465', 'M', '2010-11-13', '', '', 1, '', '', '', '', '', '', '', '', '', 'Activo', NULL, NULL, NULL, NULL, NULL),
