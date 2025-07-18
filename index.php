@@ -218,6 +218,7 @@ if (!empty($_SESSION['active'])) {
                 }
             } else {
                 echo "<script>
+                
                     document.addEventListener('DOMContentLoaded', function() {
                         Swal.fire({
                             title: 'Error',
