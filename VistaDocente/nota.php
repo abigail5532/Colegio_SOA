@@ -71,8 +71,8 @@ $iddoc = $_SESSION['idUser']; // Get the iddoc from the session
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script>
-    
-    function filtroEvaluaciones() {
+/*  
+function filtroEvaluaciones() {
     var bimestre = document.getElementById('bimestre').value;
     var idalum = "<?php echo $idalum;?>";
     var idasig = "<?php echo $idasig;?>";
@@ -106,6 +106,51 @@ $iddoc = $_SESSION['idUser']; // Get the iddoc from the session
             .catch(error => console.error('Error al obtener las evaluaciones:', error));
     }
 }
+*/
+
+function filtroEvaluaciones() {
+    var bimestre = document.getElementById('bimestre').value;
+    var idalum = "<?php echo $idalum;?>";
+    var idasig = "<?php echo $idasig;?>";
+    var iddoc = "<?php echo $iddoc;?>";
+
+    if (bimestre) {
+        // Convocatoria AJAX para obtener las evaluaciones del bimestre seleccionado
+        fetch(`getEvaluaciones.php?bimestre=${bimestre}&idalum=${idalum}&idasig=${idasig}&iddoc=${iddoc}`)
+            .then(response => response.json())
+            .then(data => {
+                let tableBody = document.querySelector('#tblEvaluaciones tbody');
+                tableBody.innerHTML = '';
+
+                let fechaHoy = new Date().toISOString().split('T')[0]; // Obtener la fecha actual en formato YYYY-MM-DD
+
+                data.forEach(evaluacion => {
+                    let editable = (fechaHoy >= evaluacion.fechainicio && fechaHoy <= evaluacion.fechafin);
+
+                    let row = `<tr>
+                        <td>${evaluacion.nombre}</td>
+                        <td>${evaluacion.fechainicio}</td>
+                        <td>${evaluacion.fechafin}</td>
+                        <td>${evaluacion.porcentaje}%</td>
+                        <td>
+                            <input type="number" class="form-control nota" data-eva="${evaluacion.ideva}" data-porcentaje="${evaluacion.porcentaje}" value="${evaluacion.nota || 0}" min="0" max="20" disabled>
+                        </td>
+                        <td>
+                            ${editable ? `
+                                <button class="btn btn-primary" onclick="editarNota(this)">Editar</button>
+                                <button class="btn btn-success" onclick="guardarNota(this, ${evaluacion.ideva})" style="display:none;">Guardar</button>
+                            ` : `<span class="text-muted" style="color: black;">Fuera de fecha</span>`}
+                        </td>
+                    </tr>`;
+                    tableBody.insertAdjacentHTML('beforeend', row);
+                });
+
+                calcularPromedio();
+            })
+            .catch(error => console.error('Error al obtener las evaluaciones:', error));
+    }
+}
+
 
 function editarNota(button) {
     let row = button.closest('tr');
