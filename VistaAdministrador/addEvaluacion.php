@@ -39,7 +39,21 @@ $idasig = isset($_GET['idasig']) ? intval($_GET['idasig']) : 0;
                         </div>
                         <div class="form-group">
                             <label class="col-form-label">Evaluación:</label>
-                            <input type="text" class="form-control" name="evaluacion" id="evaluacion">
+                            <input type="text" class="form-control" name="evaluacion" id="evaluacion" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-form-label">Fecha Inicio:</label>
+                                    <input type="date" class="form-control" name="fechainicio" id="fechainicio" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-form-label">Fecha Fin:</label>
+                                    <input type="date" class="form-control" name="fechafin" id="fechafin" required>
+                                </div>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <a href="tblAsignaturas.php" class="btn" style="background-color: red; color: white;">Cancelar</a>
@@ -80,9 +94,10 @@ $idasig = isset($_GET['idasig']) ? intval($_GET['idasig']) : 0;
                         <table class="table table-bordered" id="tblBlasPascal" width="100%" cellspacing="0" style="color: black;">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
                                     <th>Bimestre</th>
                                     <th>Evaluacion</th>
+                                    <th>Inicio</th>
+                                    <th>Fin</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
