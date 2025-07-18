@@ -38,6 +38,8 @@ $iddoc = $_SESSION['idUser']; // Get the iddoc from the session
                             <thead>
                                 <tr>
                                     <th>Evaluación</th>
+                                    <th>Inicio</th>
+                                    <th>Fin</th>
                                     <th>Porcentaje</th>
                                     <th>Nota</th>
                                     <th>Acciones</th>
@@ -85,6 +87,8 @@ $iddoc = $_SESSION['idUser']; // Get the iddoc from the session
                 tableBody.innerHTML = '';
                 data.forEach(evaluacion => {
                     let row = `<tr>
+                                    <td>${evaluacion.fechainicio}</td>
+                                    <td>${evaluacion.fechafin}</td>
                                     <td>${evaluacion.nombre}</td>
                                     <td>${evaluacion.porcentaje}%</td>
                                     <td>
