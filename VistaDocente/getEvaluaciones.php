@@ -6,7 +6,7 @@ $bimestre = $_GET['bimestre'];
 $idalum = $_GET['idalum'];
 $idasig = $_GET['idasig'];
 
-$query = mysqli_query($conexion, "SELECT e.ideva, e.evaluacion, e.porcentaje, en.nota 
+$query = mysqli_query($conexion, "SELECT e.ideva, e.evaluacion, e.fechainicio, e.fechafin, e.porcentaje, en.nota 
                                   FROM evaluaciones e 
                                   LEFT JOIN evaluacionnotas en ON e.ideva = en.evalua AND en.idalumn = '$idalum'
                                   WHERE e.bimestre = '$bimestre' AND e.idasig = '$idasig'");
@@ -21,6 +21,8 @@ while ($row = mysqli_fetch_assoc($query)) {
     $evaluaciones[] = array(
         'ideva' => $row['ideva'],
         'nombre' => $row['evaluacion'],
+        'fechainicio' => $row['fechainicio'],
+        'fechafin' => $row['fechafin'],
         'nota' => $row['nota'],
         'porcentaje' => $row['porcentaje']
     );
