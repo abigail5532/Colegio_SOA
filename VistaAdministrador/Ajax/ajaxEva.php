@@ -9,7 +9,7 @@ $fechafin = isset($_POST['fechafin']) ? trim($_POST['fechafin']) : '';
 
 if ($idasig && $bimestre && !empty($evaluacion)) {
     $stmt = $conexion->prepare("INSERT INTO evaluaciones (idasig, bimestre, evaluacion, fechainicio, fechafin) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("iis", $idasig, $bimestre, $evaluacion);
+    $stmt->bind_param("iisss", $idasig, $bimestre, $evaluacion, $fechainicio, $fechafin);
 
     if ($stmt->execute()) {
         echo "<script>
