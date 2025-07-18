@@ -50,7 +50,7 @@ $iddoc = $_SESSION['idUser']; // Get the iddoc from the session
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <th>Promedio</th>
+                                    <th colspan="4">Promedio</th>
                                     <th colspan="2">
                                         <span id="promedio">0</span>
                                         
@@ -139,7 +139,7 @@ function filtroEvaluaciones() {
                             ${editable ? `
                                 <button class="btn btn-primary" onclick="editarNota(this)">Editar</button>
                                 <button class="btn btn-success" onclick="guardarNota(this, ${evaluacion.ideva})" style="display:none;">Guardar</button>
-                            ` : `<span class="text-muted" style="color: black;">Fuera de fecha</span>`}
+                            ` : `<span class="text-muted" style="color: black;">Esta evaluación fue cerrada</span>`}
                         </td>
                     </tr>`;
                     tableBody.insertAdjacentHTML('beforeend', row);
